@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKERHB_CREDENTIALS = credentials('dockerhub')
-        GIT_REPO = 'https://github.com/quyhoangtat/eks_cicd.git'
+        GIT_REPO = 'https://github.com/21522149/EKS-CICD.git'
         MANIFEST_PATH = 'dist/kubernetes/'
         DEPLOYMENT_FILE = 'deploy.yaml'
         GIT_REPO_NAME = 'eks_cicd'
@@ -83,12 +83,12 @@ pipeline {
         }
         stage('Push Images to Docker Hub') {
             steps {
-                sh "docker push quyhoangtat/retail-store-ui:${TAG}"
-                sh "docker push quyhoangtat/retail-store-orders:${TAG}"
-                sh "docker push quyhoangtat/retail-store-cart:${TAG}"
-                sh "docker push quyhoangtat/retail-store-checkout:${TAG}"
-                sh "docker push quyhoangtat/retail-store-catalog:${TAG}"
-                sh "docker push quyhoangtat/retail-store-assets:${TAG}" 
+                sh "docker push 21522149/retail-store-ui:${TAG}"
+                sh "docker push 21522149/retail-store-orders:${TAG}"
+                sh "docker push 21522149/retail-store-cart:${TAG}"
+                sh "docker push 21522149/retail-store-checkout:${TAG}"
+                sh "docker push 21522149/retail-store-catalog:${TAG}"
+                sh "docker push 21522149/retail-store-assets:${TAG}" 
             }
         }
         stage('Update Image Tag in Deployment File and Push to Git') {
@@ -98,7 +98,7 @@ pipeline {
 					   git clone ${GIT_REPO} --branch ${env.BRANCH_NAME}
 					   cd ${GIT_REPO_NAME}/${MANIFEST_PATH}
 					   sed -i "s/\\(quyhoangtat\\/retail-store-[^:]*:\\)[^ \\"]*/\\1${TAG}/g" ${DEPLOYMENT_FILE}
-                       git add . ; git commit -m "Update deployment file to version ${TAG} [ci skip]";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/quyhoangtat/eks_cicd.git
+                       git add . ; git commit -m "Update deployment file to version ${TAG} [ci skip]";git push https://${GIT_USERNAME}:${GIT_PASSWORD}@https://github.com/21522149/EKS-CICD.git
 					   cd ..
 					   """
 				}				
@@ -107,12 +107,12 @@ pipeline {
         stage('Scan Docker Images with Trivy') {
             steps {
                 sh 'TMPDIR=/home/jenkins'
-                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-catalog.html quyhoangtat/retail-store-catalog:${TAG}"
-                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-cart.html quyhoangtat/retail-store-cart:${TAG}"
-                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-orders.html quyhoangtat/retail-store-orders:${TAG}"
-                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-checkout.html quyhoangtat/retail-store-checkout:${TAG}"
-                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-assets.html quyhoangtat/retail-store-assets:${TAG}"
-                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-ui.html quyhoangtat/retail-store-ui:${TAG}"
+                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-catalog.html 21522149/retail-store-catalog:${TAG}"
+                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-cart.html 21522149/retail-store-cart:${TAG}"
+                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-orders.html 21522149/retail-store-orders:${TAG}"
+                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-checkout.html 21522149/retail-store-checkout:${TAG}"
+                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-assets.html 21522149/retail-store-assets:${TAG}"
+                sh "trivy image --format template --template '@/usr/bin/html.tpl' -o trivy-report-ui.html 21522149/retail-store-ui:${TAG}"
             }
         }
     }
